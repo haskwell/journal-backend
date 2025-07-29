@@ -38,10 +38,10 @@ export interface JournalEntry {
   journalId: number
   title: string
   content: string
-  color?: string
-  mood: number
-  dateCreated: string
-  dateModified: string
+  color: string | null
+  mood: number | null
+  dateCreated: string | null
+  dateModified: string | null
 }
 
 export interface CreateEntryRequest {
@@ -71,4 +71,11 @@ export interface SharedEntry {
 export interface ShareEntryRequest {
   entryId: number
   toUserId: number
+}
+
+// ========== API RESPONSE ==========
+export interface ApiResponse<T>{
+    success: boolean;
+    data: T;
+    message: string;
 }
