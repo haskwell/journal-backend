@@ -3,12 +3,6 @@ import { entryRoutes } from './routes/entries'
 
 const app = new Hono()
 
-app.route('/entries', entryRoutes)
-
-app.get('/favicon.ico', (c) => c.body(null, 204))
-
-
-
-
+app.route('/journal', entryRoutes)
 
 export default app

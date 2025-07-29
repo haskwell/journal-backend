@@ -1,6 +1,7 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 import { sql } from 'drizzle-orm'
 
+// USERS table
 export const users = sqliteTable('USERS', {
   userId: integer('USER_ID').primaryKey({ autoIncrement: true }),
   username: text('USERNAME').notNull().unique(),
@@ -9,13 +10,15 @@ export const users = sqliteTable('USERS', {
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`)
 })
 
+// JOURNAL table — one per user
 export const journals = sqliteTable('JOURNAL', {
   journalId: integer('JOURNAL_ID').primaryKey({ autoIncrement: true }),
-  userId: integer('USER_ID').notNull(),
+  userId: integer('USER_ID').notNull().unique(), // 💥 one journal per user
   title: text('TITLE').notNull(),
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`)
 })
 
+// JOURNAL_ENTRY table
 export const journalEntries = sqliteTable('JOURNAL_ENTRY', {
   entryId: integer('ENTRY_ID').primaryKey({ autoIncrement: true }),
   journalId: integer('JOURNAL_ID').notNull(),
@@ -27,6 +30,7 @@ export const journalEntries = sqliteTable('JOURNAL_ENTRY', {
   dateModified: text('DATE_MODIFIED').default(sql`CURRENT_TIMESTAMP`)
 })
 
+// SHARED_ENTRY table
 export const sharedEntries = sqliteTable('SHARED_ENTRY', {
   sharingId: integer('SHARING_ID').primaryKey({ autoIncrement: true }),
   entryId: integer('ENTRY_ID').notNull(),

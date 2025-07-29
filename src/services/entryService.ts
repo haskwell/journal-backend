@@ -2,49 +2,90 @@ import { Context } from "hono";
 import { getDb } from "../db/client";
 import { journalEntries } from "../db/schema";
 import { Env } from "../env";
-import { CreateEntryRequest, JournalEntry } from "../types/types";
-import { ApiResponse } from "../types/types";
-import { sql } from "drizzle-orm";
+import { CreateEntryRequest, JournalEntry, ApiResponse } from "../types/types";
+import { eq } from "drizzle-orm";
 
+// Get all entries for a specific journal
 export const getEntriesByJournalId = async (c: Context<Env>) => {
     try {
         const db = getDb(c);
         const journalId = Number(c.req.param("journalId"));
 
         if (isNaN(journalId)) {
-            const response: ApiResponse<null> = {
+            return c.json({
                 success: false,
                 data: null,
                 message: "Invalid journal ID",
-            };
-            return c.json(response, 400);
+            }, 400);
         }
 
         const result: JournalEntry[] = await db
             .select()
             .from(journalEntries)
-            .where(sql`${journalEntries.journalId} = ${journalId}`)
+            .where(eq(journalEntries.journalId, journalId))
             .orderBy(journalEntries.dateCreated)
             .all();
 
-        const response: ApiResponse<JournalEntry[]> = {
+        return c.json({
             success: true,
             data: result,
             message: `Entries for journal ${journalId} fetched successfully`,
-        };
-        return c.json(response);
+        });
     } catch (err) {
         console.error("Error fetching entries:", err);
-        const response: ApiResponse<null> = {
+        return c.json({
             success: false,
             data: null,
             message: "Failed to fetch entries",
-        };
-        return c.json(response, 500);
+        }, 500);
     }
 };
 
+// Get a single entry by its ID
+export const getEntryById = async (c: Context<Env>) => {
+    try {
+        const db = getDb(c);
+        const entryId = Number(c.req.param("entryId"));
 
+        if (isNaN(entryId)) {
+            return c.json({
+                success: false,
+                data: null,
+                message: "Invalid entry ID",
+            }, 400);
+        }
+
+        const [entry] = await db
+            .select()
+            .from(journalEntries)
+            .where(eq(journalEntries.entryId, entryId))
+            .limit(1)
+            .all();
+
+        if (!entry) {
+            return c.json({
+                success: false,
+                data: null,
+                message: "Entry not found",
+            }, 404);
+        }
+
+        return c.json({
+            success: true,
+            data: entry,
+            message: `Entry ${entryId} fetched successfully`,
+        });
+    } catch (err) {
+        console.error("Error fetching entry:", err);
+        return c.json({
+            success: false,
+            data: null,
+            message: "Failed to fetch entry",
+        }, 500);
+    }
+};
+
+// Add a new entry to a journal
 export const addEntry = async (c: Context<Env>) => {
     try {
         const body = await c.req.json<CreateEntryRequest>();
@@ -52,12 +93,11 @@ export const addEntry = async (c: Context<Env>) => {
         const journalId = Number(c.req.param("journalId"));
 
         if (isNaN(journalId)) {
-            const response: ApiResponse<null> = {
+            return c.json({
                 success: false,
                 data: null,
                 message: "Invalid journal ID",
-            };
-            return c.json(response, 400);
+            }, 400);
         }
 
         const [inserted] = await db
@@ -71,20 +111,17 @@ export const addEntry = async (c: Context<Env>) => {
             })
             .returning();
 
-        const response: ApiResponse<JournalEntry> = {
+        return c.json({
             success: true,
             data: inserted,
             message: "Entry added successfully",
-        };
-
-        return c.json(response, 201);
+        }, 201);
     } catch (err) {
         console.error("Error adding entry:", err);
-        const response: ApiResponse<null> = {
+        return c.json({
             success: false,
             data: null,
             message: "Failed to add entry",
-        };
-        return c.json(response, 500);
+        }, 500);
     }
 };
