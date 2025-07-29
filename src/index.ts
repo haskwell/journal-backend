@@ -3,17 +3,14 @@ import { getDb } from './db/client'
 import { journalEntries } from './db/schema'
 import type { D1Database } from '@cloudflare/workers-types'
 
-// Define the Env to fix c.env.DB typing
 type Env = {
   Bindings: {
     DB: D1Database
   }
 }
 
-// Create the Hono app with Env typing
 const app = new Hono<Env>()
 
-// Example GET /entries route
 app.get('/entries', async (c) => {
   const db = getDb(c)
 
