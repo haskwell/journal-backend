@@ -2,7 +2,14 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "journal-backend",
   "main": "src/index.ts",
-  "compatibility_date": "2025-07-29"
+  "compatibility_date": "2025-07-29",
+  "d1_databases": [
+     {
+      "binding": "db",
+      "database_name": "journal-db",
+      "database_id": "9782127a-8bdf-4fd0-9217-64b952479f08"
+    }
+  ],
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
@@ -19,13 +26,6 @@
   //   {
   //     "binding": "MY_BUCKET",
   //     "bucket_name": "my-bucket"
-  //   }
-  // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
   //   }
   // ],
   // "ai": {

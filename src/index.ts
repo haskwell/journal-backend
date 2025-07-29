@@ -1,9 +1,29 @@
 import { Hono } from 'hono'
+import { getDb } from './db/client'
+import { journalEntries } from './db/schema'
+import type { D1Database } from '@cloudflare/workers-types'
 
-const app = new Hono()
+// Define the Env to fix c.env.DB typing
+type Env = {
+  Bindings: {
+    DB: D1Database
+  }
+}
 
-app.get('/', (c) => {
-  return c.text('hello world CAN U HEAR ME BRUH')
+// Create the Hono app with Env typing
+const app = new Hono<Env>()
+
+// Example GET /entries route
+app.get('/entries', async (c) => {
+  const db = getDb(c)
+
+  const result = await db
+    .select()
+    .from(journalEntries)
+    .orderBy(journalEntries.dateCreated)
+    .all()
+
+  return c.json(result)
 })
 
 export default app
