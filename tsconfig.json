@@ -6,7 +6,9 @@
     "strict": true,
     "skipLibCheck": true,
     "lib": [
-      "ESNext"
+      "ESNext",
+      "WebWorker",
+      "ES2020"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
