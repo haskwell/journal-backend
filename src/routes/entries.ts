@@ -1,8 +1,10 @@
 import { Hono } from "hono";
-import { getAllEntries } from "../services/entryService";
+import { addEntry, getEntriesByJournalId } from "../services/entryService";
+import { Env } from "../env";
 
-export const entryRoutes = new Hono()
+export const entryRoutes = new Hono<Env>()
 
-entryRoutes.get('/', getAllEntries)
+entryRoutes.get('/:journalId', getEntriesByJournalId)
+entryRoutes.post('/:journalId', addEntry)
 
 export default entryRoutes
