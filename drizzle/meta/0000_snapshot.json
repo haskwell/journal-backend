@@ -1,0 +1,343 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "8f1021d7-352e-456a-9461-0e8cebaf9d57",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "JOURNAL": {
+      "name": "JOURNAL",
+      "columns": {
+        "JOURNAL_ID": {
+          "name": "JOURNAL_ID",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "USER_ID": {
+          "name": "USER_ID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "JOURNAL_NUMBER": {
+          "name": "JOURNAL_NUMBER",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "TITLE": {
+          "name": "TITLE",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "DATE_CREATED": {
+          "name": "DATE_CREATED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "unique_journal_per_user": {
+          "name": "unique_journal_per_user",
+          "columns": [
+            "USER_ID",
+            "JOURNAL_NUMBER"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "JOURNAL_USER_ID_USERS_USER_ID_fk": {
+          "name": "JOURNAL_USER_ID_USERS_USER_ID_fk",
+          "tableFrom": "JOURNAL",
+          "tableTo": "USERS",
+          "columnsFrom": [
+            "USER_ID"
+          ],
+          "columnsTo": [
+            "USER_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "PAGES": {
+      "name": "PAGES",
+      "columns": {
+        "PAGE_ID": {
+          "name": "PAGE_ID",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "JOURNAL_ID": {
+          "name": "JOURNAL_ID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "PAGE_NUMBER": {
+          "name": "PAGE_NUMBER",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "TITLE": {
+          "name": "TITLE",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "CONTENT": {
+          "name": "CONTENT",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "MOOD": {
+          "name": "MOOD",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "DATE_CREATED": {
+          "name": "DATE_CREATED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "DATE_MODIFIED": {
+          "name": "DATE_MODIFIED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "unique_page_per_journal": {
+          "name": "unique_page_per_journal",
+          "columns": [
+            "JOURNAL_ID",
+            "PAGE_NUMBER"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "PAGES_JOURNAL_ID_JOURNAL_JOURNAL_ID_fk": {
+          "name": "PAGES_JOURNAL_ID_JOURNAL_JOURNAL_ID_fk",
+          "tableFrom": "PAGES",
+          "tableTo": "JOURNAL",
+          "columnsFrom": [
+            "JOURNAL_ID"
+          ],
+          "columnsTo": [
+            "JOURNAL_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "SHARED_PAGES": {
+      "name": "SHARED_PAGES",
+      "columns": {
+        "SHARING_ID": {
+          "name": "SHARING_ID",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "SHARED_FROM_USER_ID": {
+          "name": "SHARED_FROM_USER_ID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "SHARED_TO_USER_ID": {
+          "name": "SHARED_TO_USER_ID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "SHARED_PAGE_ID": {
+          "name": "SHARED_PAGE_ID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "IS_PRIVATE": {
+          "name": "IS_PRIVATE",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
+        "DATE_SHARED": {
+          "name": "DATE_SHARED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "one_share_per_pair": {
+          "name": "one_share_per_pair",
+          "columns": [
+            "SHARED_FROM_USER_ID",
+            "SHARED_TO_USER_ID",
+            "SHARED_PAGE_ID"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "SHARED_PAGES_SHARED_FROM_USER_ID_USERS_USER_ID_fk": {
+          "name": "SHARED_PAGES_SHARED_FROM_USER_ID_USERS_USER_ID_fk",
+          "tableFrom": "SHARED_PAGES",
+          "tableTo": "USERS",
+          "columnsFrom": [
+            "SHARED_FROM_USER_ID"
+          ],
+          "columnsTo": [
+            "USER_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "SHARED_PAGES_SHARED_TO_USER_ID_USERS_USER_ID_fk": {
+          "name": "SHARED_PAGES_SHARED_TO_USER_ID_USERS_USER_ID_fk",
+          "tableFrom": "SHARED_PAGES",
+          "tableTo": "USERS",
+          "columnsFrom": [
+            "SHARED_TO_USER_ID"
+          ],
+          "columnsTo": [
+            "USER_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "SHARED_PAGES_SHARED_PAGE_ID_PAGES_PAGE_ID_fk": {
+          "name": "SHARED_PAGES_SHARED_PAGE_ID_PAGES_PAGE_ID_fk",
+          "tableFrom": "SHARED_PAGES",
+          "tableTo": "PAGES",
+          "columnsFrom": [
+            "SHARED_PAGE_ID"
+          ],
+          "columnsTo": [
+            "PAGE_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "USERS": {
+      "name": "USERS",
+      "columns": {
+        "USER_ID": {
+          "name": "USER_ID",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "USERNAME": {
+          "name": "USERNAME",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "PASSWORD_HASH": {
+          "name": "PASSWORD_HASH",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "EMAIL_ADDRESS": {
+          "name": "EMAIL_ADDRESS",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "DATE_CREATED": {
+          "name": "DATE_CREATED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "USERS_USERNAME_unique": {
+          "name": "USERS_USERNAME_unique",
+          "columns": [
+            "USERNAME"
+          ],
+          "isUnique": true
+        },
+        "USERS_EMAIL_ADDRESS_unique": {
+          "name": "USERS_EMAIL_ADDRESS_unique",
+          "columns": [
+            "EMAIL_ADDRESS"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}
