@@ -7,7 +7,7 @@ CREATE TABLE `JOURNAL` (
 	FOREIGN KEY (`USER_ID`) REFERENCES `USERS`(`USER_ID`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `unique_journal_per_user` ON `JOURNAL` (`USER_ID`,`JOURNAL_NUMBER`);--> statement-breakpoint
+CREATE UNIQUE INDEX `uniqueJournalPerUser` ON `JOURNAL` (`USER_ID`,`JOURNAL_NUMBER`);--> statement-breakpoint
 CREATE TABLE `PAGES` (
 	`PAGE_ID` text PRIMARY KEY NOT NULL,
 	`JOURNAL_ID` text NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE `PAGES` (
 	FOREIGN KEY (`JOURNAL_ID`) REFERENCES `JOURNAL`(`JOURNAL_ID`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `unique_page_per_journal` ON `PAGES` (`JOURNAL_ID`,`PAGE_NUMBER`);--> statement-breakpoint
+CREATE UNIQUE INDEX `uniquePagePerJournal` ON `PAGES` (`JOURNAL_ID`,`PAGE_NUMBER`);--> statement-breakpoint
 CREATE TABLE `SHARED_PAGES` (
 	`SHARING_ID` text PRIMARY KEY NOT NULL,
 	`SHARED_FROM_USER_ID` text NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `SHARED_PAGES` (
 	FOREIGN KEY (`SHARED_PAGE_ID`) REFERENCES `PAGES`(`PAGE_ID`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `one_share_per_pair` ON `SHARED_PAGES` (`SHARED_FROM_USER_ID`,`SHARED_TO_USER_ID`,`SHARED_PAGE_ID`);--> statement-breakpoint
+CREATE UNIQUE INDEX `oneSharePerPair` ON `SHARED_PAGES` (`SHARED_FROM_USER_ID`,`SHARED_TO_USER_ID`,`SHARED_PAGE_ID`);--> statement-breakpoint
 CREATE TABLE `USERS` (
 	`USER_ID` text PRIMARY KEY NOT NULL,
 	`USERNAME` text NOT NULL,

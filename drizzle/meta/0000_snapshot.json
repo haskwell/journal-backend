@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "8f1021d7-352e-456a-9461-0e8cebaf9d57",
+  "id": "29220595-9415-4ef7-a111-2530a203418b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "JOURNAL": {
@@ -45,8 +45,8 @@
         }
       },
       "indexes": {
-        "unique_journal_per_user": {
-          "name": "unique_journal_per_user",
+        "uniqueJournalPerUser": {
+          "name": "uniqueJournalPerUser",
           "columns": [
             "USER_ID",
             "JOURNAL_NUMBER"
@@ -136,8 +136,8 @@
         }
       },
       "indexes": {
-        "unique_page_per_journal": {
-          "name": "unique_page_per_journal",
+        "uniquePagePerJournal": {
+          "name": "uniquePagePerJournal",
           "columns": [
             "JOURNAL_ID",
             "PAGE_NUMBER"
@@ -213,8 +213,8 @@
         }
       },
       "indexes": {
-        "one_share_per_pair": {
-          "name": "one_share_per_pair",
+        "oneSharePerPair": {
+          "name": "oneSharePerPair",
           "columns": [
             "SHARED_FROM_USER_ID",
             "SHARED_TO_USER_ID",

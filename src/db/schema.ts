@@ -15,7 +15,9 @@ export const journal = sqliteTable('JOURNAL', {
   journalNumber: integer('JOURNAL_NUMBER').notNull(),
   title: text('TITLE').notNull(),
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
-})
+}, (table) => [
+  unique('uniqueJournalPerUser').on(table.userId, table.journalNumber)
+])
 
 export const pages = sqliteTable('PAGES', {
   pageId: text('PAGE_ID').primaryKey().notNull(),
@@ -26,7 +28,9 @@ export const pages = sqliteTable('PAGES', {
   mood: integer('MOOD').notNull(),
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
   dateModified: text('DATE_MODIFIED').default(sql`CURRENT_TIMESTAMP`),
-})
+}, (table) => [
+  unique('uniquePagePerJournal').on(table.journalId, table.pageNumber)
+])
 
 export const sharedPages = sqliteTable('SHARED_PAGES', {
   sharingId: text('SHARING_ID').primaryKey().notNull(),
@@ -35,4 +39,6 @@ export const sharedPages = sqliteTable('SHARED_PAGES', {
   sharedPageId: text('SHARED_PAGE_ID').references(() => pages.pageId, {onDelete: "cascade"}).notNull(),
   isPrivate: integer('IS_PRIVATE').default(1).notNull(),
   dateShared: text('DATE_SHARED').default(sql`CURRENT_TIMESTAMP`),
-})
+}, (table) => [
+  unique('oneSharePerPair').on(table.sharedFromUserId, table.sharedToUserId, table.sharedPageId)
+])
