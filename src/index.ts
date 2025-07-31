@@ -9,15 +9,16 @@ type Bindings = {
 
 const app = new Hono<{Bindings: Bindings}>();
 
-app.use('/api/*', csrf())
+//app.use('/api/*', csrf())
 
-app.use('/auth/*', (c, next) => {
+app.route('/api', authRoutes);
+
+app.use('/api/auth/*', (c, next) => {
   const jwtMiddleware = jwt({
     secret: c.env.JWT_SECRET,
   })
   return jwtMiddleware(c, next)
 })
 
-app.route('/', authRoutes);
 
 export default app

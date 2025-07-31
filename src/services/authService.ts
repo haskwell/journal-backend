@@ -90,3 +90,30 @@ export const logout = async (c: Context) => {
     deleteCookie(c, 'authToken', cookieOptions);
     return c.json(success(null, "Log out successful"), 200);
 }
+
+export const getCurrentUser = async (c: Context) => {
+  try {
+    // Get JWT payload from context — available if jwt middleware ran
+    const payload = c.get("jwtPayload") as { userId: string };
+
+    if (!payload || !payload.userId) {
+      return c.json(failure(null, "Unauthorized"), 401);
+    }
+
+    const db = getDB(c.env);
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.userId, payload.userId));
+
+    if (user.length === 0) {
+      return c.json(failure(null, "User not found"), 404);
+    }
+
+    const { passwordHash, ...safeUser } = user[0]; // Remove sensitive data
+
+    return c.json(success(safeUser, "User fetched"), 200);
+  } catch (err) {
+    return c.json(failure(null, "Invalid token or unauthorized"), 401);
+  }
+};
