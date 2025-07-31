@@ -21,5 +21,7 @@ app.use('/api/auth/*', (c, next) => {
 
 app.route('/api', authRoutes);
 
+//T O D O: ADD ENTRIES AND JOURNAL ROUTES
+
 export default app
 //hello
