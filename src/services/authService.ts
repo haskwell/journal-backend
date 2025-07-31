@@ -94,9 +94,9 @@ export const logout = async (c: Context) => {
 export const getCurrentUser = async (c: Context) => {
   try {
     // Get JWT payload from context — available if jwt middleware ran
-    const payload = c.get("jwtPayload") as { userId: string };
+    const payload = c.get("jwtPayload") as { sub: string };
 
-    if (!payload || !payload.userId) {
+    if (!payload || !payload.sub) {
       return c.json(failure(null, "Unauthorized"), 401);
     }
 
@@ -104,7 +104,7 @@ export const getCurrentUser = async (c: Context) => {
     const user = await db
       .select()
       .from(users)
-      .where(eq(users.userId, payload.userId));
+      .where(eq(users.userId, payload.sub));
 
     if (user.length === 0) {
       return c.json(failure(null, "User not found"), 404);
