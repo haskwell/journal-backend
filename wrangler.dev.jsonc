@@ -10,4 +10,7 @@
       "database_id": "9782127a-8bdf-4fd0-9217-64b952479f08"
     }
   ],
+  "vars":{
+    "JWT_SECRET": "baller"
+  }
 }

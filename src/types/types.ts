@@ -1,15 +1,15 @@
 // ========== USER ==========
 export interface User {
-  userId: number
+  userId: string
   username: string
-  emailAddress: string
+  email: string
   passwordHash: string
-  dateCreated: string
+  //dateCreated: string
 }
 
 export interface RegisterRequest {
   username: string
-  email_address: string
+  email: string
   password: string
 }
 
@@ -21,7 +21,6 @@ export interface LoginRequest {
 export interface AuthResponse {
   token: string
 }
-
 
 // ========== JOURNAL ==========
 export interface Journal {
