@@ -54,7 +54,6 @@ export const register = async (c: Context) => {
 }
 
 export const login = async (c: Context) => {
-
     const body: LoginRequest = await c.req.json<LoginRequest>()
 
     const result = LoginSchema.safeParse(body);
@@ -87,6 +86,7 @@ export const login = async (c: Context) => {
 }
 
 export const logout = async (c: Context) => {
+
     deleteCookie(c, 'authToken', cookieOptions);
     return c.json(success(null, "Log out successful"), 200);
 }

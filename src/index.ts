@@ -18,7 +18,9 @@ app.use(
   })
 )
 
-app.use('/api/*', csrf())
+app.use('/api/*', csrf({
+  origin: 'http://127.0.0.1:5500',
+}))
 
 app.use('/api/auth/*', (c, next) => {
   const jwtMiddleware = jwt({
