@@ -2,13 +2,13 @@ import { Hono } from "hono";
 import authRoutes from "./routes/auth";
 import { csrf } from "hono/csrf";
 import { jwt } from "hono/jwt";
+import { cors } from "hono/cors";
 
 type Bindings = {
   JWT_SECRET: string;
 }
 
 const app = new Hono<{Bindings: Bindings}>();
-
 
 app.use(
   '*',
