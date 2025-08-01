@@ -13,7 +13,7 @@ const app = new Hono<{Bindings: Bindings}>();
 app.use(
   '*',
   cors({
-    origin: '*', // or restrict it later to your frontend URL
+    origin: 'http://127.0.0.1:5500',
     credentials: true,
   })
 )
