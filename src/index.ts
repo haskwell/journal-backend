@@ -4,10 +4,19 @@ import { csrf } from "hono/csrf";
 import { jwt } from "hono/jwt";
 
 type Bindings = {
-    JWT_SECRET: string;
+  JWT_SECRET: string;
 }
 
 const app = new Hono<{Bindings: Bindings}>();
+
+
+app.use(
+  '*',
+  cors({
+    origin: '*', // or restrict it later to your frontend URL
+    credentials: true,
+  })
+)
 
 app.use('/api/*', csrf())
 

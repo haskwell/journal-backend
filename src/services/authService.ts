@@ -97,23 +97,23 @@ export const getCurrentUser = async (c: Context) => {
     const payload = c.get("jwtPayload") as { sub: string };
 
     if (!payload || !payload.sub) {
-      return c.json(failure(null, "Unauthorized"), 401);
+        return c.json(failure(null, "Unauthorized"), 401);
     }
 
     const db = getDB(c.env);
     const user = await db
-      .select()
-      .from(users)
-      .where(eq(users.userId, payload.sub));
+        .select()
+        .from(users)
+        .where(eq(users.userId, payload.sub));
 
     if (user.length === 0) {
-      return c.json(failure(null, "User not found"), 404);
+        return c.json(failure(null, "User not found"), 404);
     }
 
     const { passwordHash, ...safeUser } = user[0]; // Remove sensitive data
 
     return c.json(success(safeUser, "User fetched"), 200);
-  } catch (err) {
-    return c.json(failure(null, "Invalid token or unauthorized"), 401);
-  }
+    } catch (err) {
+        return c.json(failure(null, "Invalid token or unauthorized"), 401);
+    }
 };
