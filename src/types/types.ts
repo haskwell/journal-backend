@@ -24,10 +24,11 @@ export interface AuthResponse {
 
 // ========== JOURNAL ==========
 export interface Journal {
-  journalId: number
-  userId: number
+  journalId: string
+  userId: string
   title: string
-  dateCreated: string
+  //dateCreated: string
+  journalNumber: number
 }
 
 
@@ -42,6 +43,29 @@ export interface JournalEntry {
   dateCreated: string | null
   dateModified: string | null
 }
+
+export interface CreateJournalRequest {
+  prevJournalNumber: number;
+  requestuserId: string;
+};
+
+export interface UpdateJournalRequest {
+  journalTitle: number;
+  journalId: string;
+};
+
+export interface GetJournalRequest {
+  start: number;
+  end: number;
+};
+
+export interface GetJournalRequestId {
+  journalId: string;
+};
+
+export interface DeleteJournalRequest {
+  journalId: string;
+};
 
 export interface CreateEntryRequest {
   title: string

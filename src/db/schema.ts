@@ -9,19 +9,17 @@ export const users = sqliteTable('USERS', {
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const journal = sqliteTable('JOURNAL', {
+export const journals = sqliteTable('JOURNALS', {
   journalId: text('JOURNAL_ID').notNull().primaryKey(),
   userId: text('USER_ID').references(() => users.userId, {onDelete: "cascade"}).notNull(),
   journalNumber: integer('JOURNAL_NUMBER').notNull(),
   title: text('TITLE').notNull(),
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
-}, (table) => [
-  unique('uniqueJournalPerUser').on(table.userId, table.journalNumber)
-])
+})
 
 export const pages = sqliteTable('PAGES', {
   pageId: text('PAGE_ID').primaryKey().notNull(),
-  journalId: text('JOURNAL_ID').notNull().references(() => journal.journalId, {onDelete: "cascade"}),
+  journalId: text('JOURNAL_ID').notNull().references(() => journals.journalId, {onDelete: "cascade"}),
   pageNumber: integer("PAGE_NUMBER").notNull(),
   title: text('TITLE').notNull(),
   content: text('CONTENT').notNull(),

@@ -1,8 +1,8 @@
 import { Context } from "hono"
 import { getDB } from "../db/client"
-import { LoginRequest, RegisterRequest, User } from "../types/types"
+import { Journal, LoginRequest, RegisterRequest, User } from "../types/types"
 import { success, failure } from "../utils/response"
-import { passwordResetTokens, users } from "../db/schema"
+import { journals, passwordResetTokens, users } from "../db/schema"
 import { eq, or } from "drizzle-orm"
 import { hash, compare } from "bcrypt-ts"
 import { LoginSchema, RegisterSchema } from "../schemas/auth"
@@ -48,10 +48,22 @@ export const register = async (c: Context) => {
         passwordHash: passwordHash,
         //dateCreated: ""
     }
+/*
+    const newJournal : Journal = {
+        journalId: crypto.randomUUID(),
+        userId: newUser.userId,
+        title: `${newUser.username}'s journal`,
+        journalNumber: 1,
+    }
+*/
 
     await db.insert(users).values(newUser);
+    //await db.insert(journals).values(newJournal);
+
 
     return c.json(success({username: newUser.username}, "User added successfully"), 201)
+    //return c.json(success(db.select().from(journals).all(), "Journal added successfully"), 201)
+
 }
 
 export const login = async (c: Context) => {
