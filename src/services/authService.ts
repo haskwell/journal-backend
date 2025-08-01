@@ -92,11 +92,10 @@ export const logout = async (c: Context) => {
 }
 
 export const getCurrentUser = async (c: Context) => {
-  try {
-    const payload = c.get("jwtPayload") as { sub: string };
+    const payload = c.get("jwtPayload") as { sub: string } | undefined;
 
-    if (!payload || !payload.sub) {
-        return c.json(failure(null, "Unauthorized"), 401);
+    if (!payload?.sub) {
+        return c.json(failure(null, "Invalid token or unauthorized"), 401);
     }
 
     const db = getDB(c.env);
@@ -109,10 +108,6 @@ export const getCurrentUser = async (c: Context) => {
         return c.json(failure(null, "User not found"), 404);
     }
 
-    const { passwordHash, ...safeUser } = user[0]; // Remove sensitive data
-
-    return c.json(success(safeUser, "User fetched"), 200);
-    } catch (err) {
-        return c.json(failure(null, "Invalid token or unauthorized"), 401);
-    }
+    const { passwordHash, ...safeUser } = user[0];
+    return c.json(success(safeUser, "User fetched"), 200);   
 };
