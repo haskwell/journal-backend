@@ -13,13 +13,13 @@ const app = new Hono<{Bindings: Bindings}>();
 app.use(
   '*',
   cors({
-    origin: 'http://127.0.0.1:5500',
+    origin: ['http://127.0.0.1:5500', 'https://spero.pages.dev'],
     credentials: true,
   })
 )
 
 app.use('/api/*', csrf({
-  origin: 'http://127.0.0.1:5500',
+  origin: ['http://127.0.0.1:5500', 'https://spero.pages.dev'],
 }))
 
 app.use('/api/auth/*', (c, next) => {
