@@ -93,7 +93,6 @@ export const logout = async (c: Context) => {
 
 export const getCurrentUser = async (c: Context) => {
   try {
-    // Get JWT payload from context — available if jwt middleware ran
     const payload = c.get("jwtPayload") as { sub: string };
 
     if (!payload || !payload.sub) {
