@@ -42,3 +42,9 @@ export const sharedPages = sqliteTable('SHARED_PAGES', {
 }, (table) => [
   unique('oneSharePerPair').on(table.sharedFromUserId, table.sharedToUserId, table.sharedPageId)
 ])
+
+export const passwordResetTokens = sqliteTable('PASSWORD_RESET_TOKENS', {
+  token: text('TOKEN').primaryKey(),
+  userId: text('USER_ID').notNull().references(() => users.userId),
+  expiresAt: text('EXPIRES_AT').notNull(),
+});

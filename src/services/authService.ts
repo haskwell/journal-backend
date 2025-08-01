@@ -2,12 +2,13 @@ import { Context } from "hono"
 import { getDB } from "../db/client"
 import { LoginRequest, RegisterRequest, User } from "../types/types"
 import { success, failure } from "../utils/response"
-import { users } from "../db/schema"
+import { passwordResetTokens, users } from "../db/schema"
 import { eq, or } from "drizzle-orm"
 import { hash, compare } from "bcrypt-ts"
 import { LoginSchema, RegisterSchema } from "../schemas/auth"
 import { cookieOptions, generateToken } from "../utils/token"
-import { deleteCookie, setCookie } from "hono/cookie"
+import { deleteCookie, getCookie, setCookie } from "hono/cookie"
+import { nanoid } from 'nanoid'
 
 export const register = async (c: Context) => {
 
@@ -86,6 +87,11 @@ export const login = async (c: Context) => {
 }
 
 export const logout = async (c: Context) => {
+    const token = getCookie(c, 'authToken');
+
+    if (!token) {
+        return c.json(failure(null, "You're not logged in"), 401);
+    }
 
     deleteCookie(c, 'authToken', cookieOptions);
     return c.json(success(null, "Log out successful"), 200);
@@ -111,3 +117,83 @@ export const getCurrentUser = async (c: Context) => {
     const { passwordHash, ...safeUser } = user[0];
     return c.json(success(safeUser, "User fetched"), 200);   
 };
+
+export const passwordResetRequest = async (c: Context) => {
+
+    const apiUrl = 'https://spero.pages.dev';
+    //const apiUrl = 'http://localhost:5173';
+
+    const {email} = await c.req.json();
+    const db = getDB(c.env);
+
+    const user = await db
+        .select()
+        .from(users)
+        .where(
+            eq(users.email, email)
+        )
+        .get()
+        
+    if (!user) return c.json(success(null, "If email exists, reset link will be sent."));
+
+    const token = nanoid(32)
+
+    const exp = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+    await db
+        .insert(passwordResetTokens)
+        .values({
+            token,
+            userId: user.userId,
+            expiresAt: exp
+        })
+
+    const resetLink = `${apiUrl}/reset-password/?token=${token}`;
+
+    //todo send mail, sending link in response for now for testing since console.log refuses to work for some reason
+    return c.json(success(resetLink, "If email exists, reset link will be sent."));
+}
+
+export const passwordReset = async (c: Context) => {
+
+    const { token, newPassword } = await c.req.json();
+    const db = getDB(c.env)
+
+    const record = await db
+        .select()
+        .from(passwordResetTokens)
+        .where(
+            eq(passwordResetTokens.token, token)
+        )
+        .get()
+    
+    if (!record) {
+        return c.json(failure(null, "Invalid or expired token."), 400);
+    }
+
+    const now = new Date();
+    const exp = new Date(record.expiresAt);
+
+    if(exp < now){
+        return c.json(failure(null, "Invalid or expired token"), 400);
+    }
+
+    const newPasswordHash = await hash(newPassword, 10);
+
+    await db
+        .update(users)
+        .set({
+            passwordHash: newPasswordHash
+        })
+        .where(
+            eq(users.userId, record.userId)
+        )
+
+    await db
+        .delete(passwordResetTokens)
+        .where(
+            eq(passwordResetTokens.token, token)
+        )
+    
+    return c.json(success(null, "Password has been reset successfully."));    
+}
