@@ -17,7 +17,7 @@ export const generateToken = async (userId: string, c: Context) => {
 export const cookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: 'Strict',
+    sameSite: 'None',
     path: '/',
     maxAge: 3600
 } as CookieOptions;
