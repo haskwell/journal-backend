@@ -1,58 +1,50 @@
 import { Context } from "hono";
 import { getDB } from "../db/client";
-import { CreateJournalRequest, Journal, UpdateJournalRequest } from "../types/types";
-import { journals } from "../db/schema";
 import { failure, success } from "../utils/response";
-import { desc, eq } from "drizzle-orm";
-import { decodeBase64 } from "hono/utils/encode";
+import { inputValidator } from "../utils/helpers";
+import { CreateJournalSchema, GetJournalByIdSchema, GetJournalListSchema, UpdateJournalSchema } from "../schemas/journal";
+import * as journalService from '../services/journalService'
 
-export const createJournal = async (c: Context) => {
+export const createJournalHandler = async (c: Context) => {
     
-    const { prevJournalNumber, requestuserId }: CreateJournalRequest = await c.req.json();
-    if (typeof prevJournalNumber !== 'number' || typeof requestuserId !== 'string') {
-        return c.json(failure("Invalid input"), 400);
-    }
+    const validation = await inputValidator(c, CreateJournalSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation; 
 
-    const db = getDB(c.env);
-    const newJournal: Journal = {
-        journalId: crypto.randomUUID(),
-        journalNumber: prevJournalNumber + 1,
-        userId: requestuserId,
-        title: "New Journal"
-    }
-    await db.insert(journals).values(newJournal)
-    return c.json(success(null, `Journal with number: ${newJournal.journalNumber} successfully created for user with ID: ${requestuserId}`));
+    const response = await journalService.createJournal(getDB(c.env), body);
+    
+    return c.json(success(null, `Journal with number: ${response.journalId} successfully created for user with ID: ${response.userId}`));
 
 }
 
-export const updateJournal = async (c: Context) => {
-    const {journalTitle , journalId} : UpdateJournalRequest = await c.req.json();
-
-    if (typeof journalTitle !== 'string') {
-        return c.json(failure("Invalid input"), 400);
-    }
-  
-    const db = getDB(c.env);
-    await db.update(journals).set({title: journalTitle}).where(eq(journals.journalId, journalId))
-
-    return c.json(success(null, `Journal ${journalId} updated successfully.`));
+export const updateJournalHandler = async (c: Context) => {
+    const validation = await inputValidator(c, UpdateJournalSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+    const response = await journalService.updateJournal(getDB(c.env), body);
+    return c.json(success(null, `Journal updated successfully.`));
 }
 
-export const getJournals = async (c: Context) => {
-    const {start, end} = await c.req.json();
+export const getJournalListHandler = async (c: Context) => {
+    const validation = await inputValidator(c, GetJournalListSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+    const response = await journalService.getJournalList(getDB(c.env), body);
+    return c.json(success(response, `Journal list fetched.`));
+}
 
-    const db = getDB(c.env)
+export const getJournalByIdHandler = async (c: Context) => {
+    const validation = await inputValidator(c, GetJournalByIdSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+    const response = await journalService.getJournalById(getDB(c.env), body);
+    return c.json(success(response, `Journal fetched.`));
+}
 
-    const journalArray: Journal[] = await db
-        .select()
-        .from(journals)
-        .orderBy(desc(journals.dateCreated))
-
-    //get largest journalNumber from db
-    
-    //calculate from where to where we need to get
-
-    //get em from the db
-
-    //return em
+export const deleteJournalHandler = async (c: Context) => {
+    const validation = await inputValidator(c, GetJournalByIdSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+    const response = await journalService.deleteJournal(getDB(c.env), body);
+    return c.json(success(response, `Journal deleted.`));
 }

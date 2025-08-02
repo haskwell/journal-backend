@@ -18,9 +18,4 @@ export const PasswordResetRequestSchema = z.object({
 export const PasswordResetSchema = z.object({
     password: z.string().min(6, "Password must be at least 6 characters long"),
     token: z.string()
-})
-
-export type LoginRequest = z.infer<typeof LoginSchema>;
-export type RegisterRequest = z.infer<typeof RegisterSchema>;
-export type PasswordResetRequestSchema = z.infer<typeof PasswordResetRequestSchema>;
-export type PasswordResetSchema = z.infer<typeof PasswordResetSchema>;
+});

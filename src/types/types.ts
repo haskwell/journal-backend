@@ -36,8 +36,30 @@ export interface Journal {
   journalNumber: number
 }
 
+export interface CreateJournalRequest {
+  prevJournalNumber: number;
+  requestuserId: string;
+};
 
-// ========== JOURNAL ENTRY ==========
+export interface UpdateJournalRequest {
+  journalTitle: string;
+  journalId: string;
+};
+
+export interface GetJournalListRequest {
+  listStart: number;
+  listEnd: number;
+};
+
+export interface GetJournalByIdRequest {
+  journalId: string;
+};
+
+export interface DeleteJournalRequest {
+  journalId: string;
+};
+
+// ========== ENTRIES ==========
 export interface JournalEntry {
   entryId: number
   journalId: number
@@ -48,29 +70,6 @@ export interface JournalEntry {
   dateCreated: string | null
   dateModified: string | null
 }
-
-export interface CreateJournalRequest {
-  prevJournalNumber: number;
-  requestuserId: string;
-};
-
-export interface UpdateJournalRequest {
-  journalTitle: number;
-  journalId: string;
-};
-
-export interface GetJournalRequest {
-  start: number;
-  end: number;
-};
-
-export interface GetJournalRequestId {
-  journalId: string;
-};
-
-export interface DeleteJournalRequest {
-  journalId: string;
-};
 
 export interface CreateEntryRequest {
   title: string
