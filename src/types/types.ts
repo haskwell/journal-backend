@@ -18,11 +18,11 @@ export interface LoginRequest {
   password: string
 }
 
-export interface PasswordResetRequest {
+export interface PasswordResetRequestType {
   email: string
 }
 
-export interface PasswordReset {
+export interface PasswordResetType {
   password: string
   token: string
 }

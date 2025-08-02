@@ -68,8 +68,8 @@ export const getCurrentUserHandler = async (c: Context) => {
 
 export const passwordResetRequestHandler = async (c: Context) => {
 
-    const apiUrl = 'https://spero.pages.dev';
-    //const apiUrl = 'http://localhost:5173';
+    //const apiUrl = 'https://spero.pages.dev';
+    const apiUrl = 'http://localhost:5173';
     
     const validation = await inputValidator(c, PasswordResetRequestSchema);
     if (typeof validation === 'string') return c.json(failure(null, validation));

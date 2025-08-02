@@ -1,4 +1,4 @@
-import { PasswordReset, PasswordResetRequest, RegisterRequest, User } from "../types/types";
+import { PasswordResetRequestType, PasswordResetType, RegisterRequest, User } from "../types/types";
 import { DBtype } from "../db/client";
 import { passwordResetTokens, users } from "../db/schema";
 import { eq, or } from "drizzle-orm";
@@ -63,7 +63,7 @@ export const getCurrentUser = async (db: DBtype, request: string) => {
     return user[0];
 }
 
-export const passwordResetRequest = async (db: DBtype, request: PasswordResetRequest) => {
+export const passwordResetRequest = async (db: DBtype, request: PasswordResetRequestType) => {
 
     const user = await db
         .select()
@@ -90,7 +90,7 @@ export const passwordResetRequest = async (db: DBtype, request: PasswordResetReq
     return token;
 }
 
-export const passwordReset = async (db: DBtype, request: PasswordReset) => {
+export const passwordReset = async (db: DBtype, request: PasswordResetType) => {
     
     const record = await db
         .select()
