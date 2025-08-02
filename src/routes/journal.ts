@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { createJournal, updateJournal } from "../services/journalService";
+import { createJournal, updateJournal } from "../handlers/journalHandler";
 
 const journalRoutes = new Hono()
 

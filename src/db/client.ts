@@ -7,3 +7,5 @@ export interface Env{
 }
 
 export const getDB = (env: Env) => drizzle(env.DB, {schema});
+
+export type DBtype = ReturnType<typeof getDB>

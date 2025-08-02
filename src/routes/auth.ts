@@ -1,13 +1,13 @@
 import { Hono } from "hono";
-import { login, register, logout, getCurrentUser, passwordResetRequest, passwordReset } from "../services/authService";
+import * as authHandler from '../handlers/authHandler'
 
 const authRoutes = new Hono();
 
-authRoutes.post('/login', login);
-authRoutes.post('/register', register);
-authRoutes.post('/logout', logout);
-authRoutes.get('/auth/me', getCurrentUser);
-authRoutes.post('/password-reset-request', passwordResetRequest);
-authRoutes.post('/password-reset', passwordReset);
+authRoutes.post('/login', authHandler.loginHandler);
+authRoutes.post('/register', authHandler.registerHandler);
+authRoutes.post('/logout', authHandler.logout);
+authRoutes.get('/auth/me', authHandler.getCurrentUserHandler);
+authRoutes.post('/password-reset-request', authHandler.passwordResetRequestHandler);
+authRoutes.post('/password-reset', authHandler.passwordResetHandler);
 
 export default authRoutes

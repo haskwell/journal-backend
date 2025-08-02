@@ -18,7 +18,12 @@ export interface LoginRequest {
   password: string
 }
 
-export interface AuthResponse {
+export interface PasswordResetRequest {
+  email: string
+}
+
+export interface PasswordReset {
+  password: string
   token: string
 }
 
