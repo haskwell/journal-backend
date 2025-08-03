@@ -4,6 +4,7 @@ import { csrf } from "hono/csrf";
 import { jwt } from "hono/jwt";
 import { cors } from "hono/cors";
 import { failure } from "./utils/response";
+import pageRoutes from "./routes/page";
 
 type Bindings = {
   JWT_SECRET: string;
@@ -36,5 +37,6 @@ app.use('/api/auth/*', async (c, next) => {
 });
 
 app.route('/api', authRoutes);
+app.route('/api', pageRoutes)
 
 export default app

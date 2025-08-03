@@ -9,37 +9,19 @@ export const users = sqliteTable('USERS', {
   dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const journals = sqliteTable('JOURNALS', {
-  journalId: text('JOURNAL_ID').notNull().primaryKey(),
-  userId: text('USER_ID').references(() => users.userId, {onDelete: "cascade"}).notNull(),
-  journalNumber: integer('JOURNAL_NUMBER').notNull(),
-  title: text('TITLE').notNull(),
-  dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
-})
 
-export const pages = sqliteTable('PAGES', {
-  pageId: text('PAGE_ID').primaryKey().notNull(),
-  journalId: text('JOURNAL_ID').notNull().references(() => journals.journalId, {onDelete: "cascade"}),
+export const pages = sqliteTable("PAGES", {
+  pageId: text("PAGE_ID").primaryKey().notNull(),
+  userId: text("USER_ID").notNull().references(() => users.userId),
+  pageTitle: text("PAGE_TITLE").notNull(),
   pageNumber: integer("PAGE_NUMBER").notNull(),
-  title: text('TITLE').notNull(),
-  content: text('CONTENT').notNull(),
-  mood: integer('MOOD').notNull(),
-  dateCreated: text('DATE_CREATED').default(sql`CURRENT_TIMESTAMP`),
-  dateModified: text('DATE_MODIFIED').default(sql`CURRENT_TIMESTAMP`),
-}, (table) => [
-  unique('uniquePagePerJournal').on(table.journalId, table.pageNumber)
-])
+  content: text("CONTENT").notNull(),
+  mood: integer("MOOD").notNull(),
+  color: text("COLOR").notNull(),
+  dateCreated: text("DATE_CREATED").default(sql`CURRENT_TIMESTAMP`),
+  dateModified: text("DATE_MODIFIED").default(sql`CURRENT_TIMESTAMP`),
+});
 
-export const sharedPages = sqliteTable('SHARED_PAGES', {
-  sharingId: text('SHARING_ID').primaryKey().notNull(),
-  sharedFromUserId: text('SHARED_FROM_USER_ID').references(() => users.userId).notNull(),
-  sharedToUserId: text('SHARED_TO_USER_ID').references(() => users.userId).notNull(),
-  sharedPageId: text('SHARED_PAGE_ID').references(() => pages.pageId, {onDelete: "cascade"}).notNull(),
-  isPrivate: integer('IS_PRIVATE').default(1).notNull(),
-  dateShared: text('DATE_SHARED').default(sql`CURRENT_TIMESTAMP`),
-}, (table) => [
-  unique('oneSharePerPair').on(table.sharedFromUserId, table.sharedToUserId, table.sharedPageId)
-])
 
 export const passwordResetTokens = sqliteTable('PASSWORD_RESET_TOKENS', {
   token: text('TOKEN').primaryKey(),

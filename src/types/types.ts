@@ -28,36 +28,15 @@ export interface PasswordResetType {
 }
 
 // ========== JOURNAL ==========
-export interface Journal {
-  journalId: string
-  userId: string
-  title: string
-  //dateCreated: string
-  journalNumber: number
+export interface Page {
+  pageId: string;
+  userId: string;
+  pageTitle: string;
+  pageNumber: number;
+  content: string;
+  mood: number;
+  color: string;
 }
-
-export interface CreateJournalRequest {
-  prevJournalNumber: number;
-  requestuserId: string;
-};
-
-export interface UpdateJournalRequest {
-  journalTitle: string;
-  journalId: string;
-};
-
-export interface GetJournalListRequest {
-  listStart: number;
-  listEnd: number;
-};
-
-export interface GetJournalByIdRequest {
-  journalId: string;
-};
-
-export interface DeleteJournalRequest {
-  journalId: string;
-};
 
 // ========== ENTRIES ==========
 export interface JournalEntry {
@@ -71,18 +50,19 @@ export interface JournalEntry {
   dateModified: string | null
 }
 
-export interface CreateEntryRequest {
+export interface CreatePageRequest {
   title: string
   content: string
   color?: string
   mood: number
 }
 
-export interface UpdateEntryRequest {
+export interface UpdatePageRequest {
   title?: string
   content?: string
   color?: string
   mood?: number
+  pageNumber: number
 }
 
 

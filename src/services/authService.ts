@@ -1,9 +1,8 @@
-import { PasswordResetRequestType, PasswordResetType, RegisterRequest, User } from "../types/types";
+import { LoginRequest, PasswordResetRequestType, PasswordResetType, RegisterRequest, User } from "../types/types";
 import { DBtype } from "../db/client";
 import { passwordResetTokens, users } from "../db/schema";
 import { eq, or } from "drizzle-orm";
 import { compare, hash } from "bcrypt-ts";
-import { LoginRequest } from "../schemas/auth";
 import { nanoid } from "nanoid";
 
 export const registerUser = async (db : DBtype, request: RegisterRequest) => {
