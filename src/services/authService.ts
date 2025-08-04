@@ -1,9 +1,10 @@
 import { LoginRequest, PasswordResetRequestType, PasswordResetType, RegisterRequest, User } from "../types/types";
 import { DBtype } from "../db/client";
 import { passwordResetTokens, users } from "../db/schema";
-import { eq, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { compare, hash } from "bcrypt-ts";
 import { nanoid } from "nanoid";
+import { Request } from "@cloudflare/workers-types";
 
 export const registerUser = async (db : DBtype, request: RegisterRequest) => {
     
@@ -128,3 +129,40 @@ export const passwordReset = async (db: DBtype, request: PasswordResetType) => {
         )
     return true;
 }
+
+export const updateUsername = async (
+  db: DBtype,
+  newUsername: string,
+  requestPassword: string,
+  userId: string
+) => {
+
+    const existing : User[] = await db
+        .select()
+        .from(users)
+        .where(
+            eq(users.username, newUsername),
+        );
+    if(existing.length != 0) {
+        return false;
+    }
+
+    const user = await db
+        .select()
+        .from(users)
+        .where(eq(users.userId, userId))
+        .then((res) => res[0]);
+
+    if (!user) return false;
+
+    const isValidPassword = await compare(requestPassword, user.passwordHash);
+
+    if (!isValidPassword) return false;
+
+    await db
+        .update(users)
+        .set({ username: newUsername })
+        .where(eq(users.userId, userId));
+
+    return true;
+};

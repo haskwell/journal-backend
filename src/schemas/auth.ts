@@ -11,6 +11,11 @@ export const LoginSchema = z.object({
     password: z.string().min(1, "Password is required"),
 });
 
+export const UpdateUsernameSchema = z.object({
+    newUsername: z.string().min(1, "Username is required"),
+    password: z.string().min(1, "Password is required"),
+});
+
 export const PasswordResetRequestSchema = z.object({
     email: z.email("Invalid email address"),
 });

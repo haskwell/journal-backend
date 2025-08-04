@@ -1,7 +1,7 @@
 import { Context } from "hono"
 import { getDB } from "../db/client"
 import { success, failure } from "../utils/response"
-import { LoginSchema, RegisterSchema, PasswordResetRequestSchema, PasswordResetSchema } from "../schemas/auth"
+import { LoginSchema, RegisterSchema, PasswordResetRequestSchema, PasswordResetSchema, UpdateUsernameSchema } from "../schemas/auth"
 import { cookieOptions, generateToken } from "../utils/token"
 import { deleteCookie, getCookie, setCookie } from "hono/cookie"
 import { inputValidator } from "../utils/helpers"
@@ -102,4 +102,25 @@ export const passwordResetHandler = async (c: Context) => {
     else{
         return c.json(success(null, "Password has been reset successfully."));    
     }
+}
+
+export const updateUsernameHandler = async (c: Context) => {
+    const validation = await inputValidator(c, UpdateUsernameSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+        
+    const payload = c.get("jwtPayload") as { sub: string } | undefined;
+
+    if (!payload?.sub) {
+        return c.json(failure(null, "Invalid token or unauthorized"), 401);
+    }
+
+    const response = await authService.updateUsername(getDB(c.env), body.newUsername, body.password, payload.sub);
+
+    if(!response){
+        return c.json(failure(null, "Error in changing username"), 400);
+    }
+    else{
+        return c.json(success(null, "Username has been reset successfully."));    
+    } 
 }
