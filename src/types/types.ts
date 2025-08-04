@@ -38,18 +38,6 @@ export interface Page {
   color: string;
 }
 
-// ========== ENTRIES ==========
-export interface JournalEntry {
-  entryId: number
-  journalId: number
-  title: string
-  content: string
-  color: string | null
-  mood: number | null
-  dateCreated: string | null
-  dateModified: string | null
-}
-
 export interface CreatePageRequest {
   title: string
   content: string
