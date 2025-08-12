@@ -1,10 +1,9 @@
 import { LoginRequest, PasswordResetRequestType, PasswordResetType, RegisterRequest, User } from "../types/types";
 import { DBtype } from "../db/client";
 import { passwordResetTokens, users } from "../db/schema";
-import { and, eq, or } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { compare, hash } from "bcrypt-ts";
 import { nanoid } from "nanoid";
-import { Request } from "@cloudflare/workers-types";
 
 export const registerUser = async (db : DBtype, request: RegisterRequest) => {
     

@@ -28,3 +28,11 @@ export const passwordResetTokens = sqliteTable('PASSWORD_RESET_TOKENS', {
   userId: text('USER_ID').notNull().references(() => users.userId),
   expiresAt: text('EXPIRES_AT').notNull(),
 });
+
+export const sharedPages = sqliteTable('SHARED_PAGES', {
+  shareId: text("SHARE_ID").primaryKey().notNull(),
+  sharedFromUserId: text("SHARED_FROM_USER_ID").notNull().references(() => users.userId),
+  sharedToUserId: text("SHARED_TO_USER_ID").notNull().references(() => users.userId),
+  sharedPageId: text("SHARED_PAGE_ID").notNull().references(() => pages.pageId),
+  dateShared: text("DATE_SHARED").default(sql`CURRENT_TIMESTAMP`),
+})
