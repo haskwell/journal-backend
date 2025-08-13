@@ -3,6 +3,8 @@ import { getDB } from "../db/client";
 import { failure, success } from "../utils/response";
 import * as pageService from '../services/pageService'
 import { UpdatePageRequest } from "../types/types";
+import { inputValidator } from "../utils/helpers";
+import { UpdatePageSchema } from "../schemas/page";
 
 export const createPageHandler = async (c: Context) => {
     const payload = c.get('jwtPayload') as {sub: string} | undefined;
@@ -25,7 +27,12 @@ export const updatePageHandler = async (c: Context) => {
        return c.json(failure(null, 'Invalid'))
     }
 
-    const request : UpdatePageRequest = await c.req.json();
+    const validation = await inputValidator(c, UpdatePageSchema);
+    if (typeof validation === 'string') {
+        return c.json(failure(null, validation));
+    }
+
+    const request = validation;
 
     await pageService.updatePage(getDB(c.env), request, payload.sub);
     return c.json(success(null, `Page updated successfully.`));
