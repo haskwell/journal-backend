@@ -7,7 +7,7 @@ export const sharePage = async (db: DBtype, fromUserId: string, toUsername: stri
     const toUserIdarr = await db.select({
         userId: users.userId
     }).from(users).where(eq(users.username, toUsername))
-
+    if(!toUserIdarr[0]) return false;
     const pagesResult = await db.select().from(pages).where(
         and(
             eq(pages.userId, fromUserId),

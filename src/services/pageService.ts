@@ -34,8 +34,17 @@ export const createPage = async (db: DBtype, request: string) => {
 }
 
 export const updatePage = async (db: DBtype, request: UpdatePageRequest, userid: string) => {
+    const page = await db.select().from(pages)
+        .where(
+            and(
+                eq(pages.pageNumber, request.pageNumber),
+                eq(pages.userId, userid)
+            )
+        )
+        
     
-    const res = await db
+    if(!page[0]) return false;
+    await db
         .update(pages)
         .set(
             {
@@ -52,7 +61,7 @@ export const updatePage = async (db: DBtype, request: UpdatePageRequest, userid:
                 eq(pages.userId, userid)
             )
         )
-    return res.rowsAffected > 0;
+    return true;
 }
 
 export const getPagesList = async (db: DBtype, listStart: number, listEnd: number, request: string) => {
@@ -83,12 +92,23 @@ export const getPageById = async (db: DBtype, request: string, pageNumber: numbe
 }
 
 export const deletePage = async (db: DBtype, request: string, pageNumber: number) => {
-    const res = await db.delete(pages)
+    
+    const page = await db.select().from(pages).where(
+                and(
+                    eq(pages.userId, request),
+                    eq(pages.pageNumber, pageNumber)
+                )
+            )
+    
+    if(!page[0]) return false;
+    
+    await db.delete(pages)
             .where(
                 and(
                     eq(pages.userId, request),
                     eq(pages.pageNumber, pageNumber)
                 )
             )
-    return res.rowsAffected > 0;
+
+    return true;
 }

@@ -35,7 +35,7 @@ export const updatePageHandler = async (c: Context) => {
     const request = validation;
 
     const response = await pageService.updatePage(getDB(c.env), request, payload.sub);
-    if(!response) return c.json(failure(response, `Page updaete failed.`));
+    if(!response) return c.json(failure(response, `Page update failed.`));
     else
     return c.json(success(response, `Page updated.`));}
 
