@@ -6,6 +6,8 @@ import { cors } from "hono/cors";
 import { failure } from "./utils/response";
 import pageRoutes from "./routes/page";
 
+//very cool project
+
 type Bindings = {
   JWT_SECRET: string;
 }
