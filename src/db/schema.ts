@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { integer, text, sqliteTable, primaryKey } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable('USERS', {
   userId: text('USER_ID').primaryKey().notNull(),
@@ -28,7 +28,6 @@ export const passwordResetTokens = sqliteTable('PASSWORD_RESET_TOKENS', {
 });
 
 export const sharedPages = sqliteTable('SHARED_PAGES', {
-  shareId: text("SHARE_ID").primaryKey().notNull(),
   sharedFromUserId: text("SHARED_FROM_USER_ID").notNull().references(() => users.userId, {onDelete: "cascade"}),
   sharedToUserId: text("SHARED_TO_USER_ID").notNull().references(() => users.userId, {onDelete: "cascade"}),
   sharedPageId: text("SHARED_PAGE_ID").notNull().references(() => pages.pageId, {onDelete: "cascade"}),

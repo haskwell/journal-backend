@@ -1,9 +1,12 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, or } from "drizzle-orm";
 import { DBtype } from "../db/client";
-import { pages, sharedPages } from "../db/schema";
+import { pages, sharedPages, users } from "../db/schema";
 import { Page } from "../types/types";
 
-export const sharePage = async (db: DBtype, fromUserId: string, toUserId: string, pageNumber: number) => {
+export const sharePage = async (db: DBtype, fromUserId: string, toUsername: string, pageNumber: number) => {
+    const toUserIdarr = await db.select({
+        userId: users.userId
+    }).from(users).where(eq(users.username, toUsername))
 
     const pagesResult = await db.select().from(pages).where(
         and(
@@ -16,31 +19,43 @@ export const sharePage = async (db: DBtype, fromUserId: string, toUserId: string
     const pageId = pagesResult[0].pageId;
 
     const newShare = {
-        shareId: crypto.randomUUID(),
         sharedFromUserId: fromUserId,
-        sharedToUserId: toUserId,
+        sharedToUserId: toUserIdarr[0].userId,
         sharedPageId: pageId,
         dateShared: new Date().toISOString()
     };
-
     await db.insert(sharedPages).values(newShare);
-
     return newShare;
 };
 
-export const deleteShare = async (db: DBtype, userId: string, shareId: string) => {
-
-    const deleted = await db.delete(sharedPages).where(
+export const deleteShare = async (db: DBtype, userId: string, pageId: string) => {
+    
+    await db.delete(sharedPages).where(
         and(
-            eq(sharedPages.sharedFromUserId, userId),
-            eq(sharedPages.shareId, shareId)
+            or(
+                eq(sharedPages.sharedFromUserId, userId),
+                eq(sharedPages.sharedToUserId, userId)
+            ),
+            eq(sharedPages.sharedPageId, pageId)
         )
     )
-    if (deleted.rowCount === 0) {
+
+    return true;
+}
+
+export const getPagesSharedWithMeById = async (db: DBtype, userId: string, pageId: string) => {
+
+    const share = await db.select().from(sharedPages).where(
+        and(
+            eq(sharedPages.sharedToUserId, userId),
+            eq(sharedPages.sharedPageId, pageId)
+        )
+    )
+    if (share.length === 0) {
         return false;
     }
-    return true;
-
+    const page = await db.select().from(pages).where(eq(pages.pageId, pageId));
+    return page[0];
 }
 
 export const getPagesSharedWithMe = async (db: DBtype, listStart: number, listEnd: number, request: string) => {

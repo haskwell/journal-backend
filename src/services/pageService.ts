@@ -23,7 +23,7 @@ export const createPage = async (db: DBtype, request: string) => {
         pageTitle: "New Page",
         content: "",
         mood: 5,
-        color: "black"
+        color: "black",
     }
     await db
         .insert(pages)
