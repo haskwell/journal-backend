@@ -17,8 +17,9 @@ export const sharePageHandler = async (c: Context) => {
         return c.json(failure(null, "Invalid page number"));
     }
     const response = await shareService.sharePage(getDB(c.env), payload.sub, sharedToUsername, pageNumber);
-    return c.json(success(response, "Page shared successfully."));
-};
+    if(!response) return c.json(failure(response, `Page sharing failed.`));
+    else
+    return c.json(success(response, `Page shared.`));};
 
 export const deleteShareHandler = async (c: Context) => {
     const payload = c.get("jwtPayload") as { sub: string } | undefined;

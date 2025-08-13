@@ -34,9 +34,10 @@ export const updatePageHandler = async (c: Context) => {
 
     const request = validation;
 
-    await pageService.updatePage(getDB(c.env), request, payload.sub);
-    return c.json(success(null, `Page updated successfully.`));
-}
+    const response = await pageService.updatePage(getDB(c.env), request, payload.sub);
+    if(!response) return c.json(failure(response, `Page updaete failed.`));
+    else
+    return c.json(success(response, `Page updated.`));}
 
 export const getPageListHandler = async (c: Context) => {
     const payload = c.get('jwtPayload') as {sub: string} | undefined;
@@ -67,7 +68,9 @@ export const getPageByIdHandler = async (c: Context) => {
        return c.json(failure(null, 'Invalid')) 
     }
     const response = await pageService.getPageById(getDB(c.env), payload.sub, pageNumber);
-    return c.json(success(response, `Journal fetched.`));
+    if(!response) return c.json(failure(response, `Page fetch failed.`));
+    else
+    return c.json(success(response, `Page fetched.`));
 }
 
 export const deletePageHandler = async (c: Context) => {
@@ -78,5 +81,7 @@ export const deletePageHandler = async (c: Context) => {
        return c.json(failure(null, 'Invalid')) 
     }
     const response = await pageService.deletePage(getDB(c.env), payload.sub, pageNumber);
-    return c.json(success(response, `Journal deleted.`));
+    if(!response) return c.json(failure(response, `Page deletion failed.`));
+    else
+    return c.json(success(response, `Page deleted.`));
 }

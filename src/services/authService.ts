@@ -165,3 +165,68 @@ export const updateUsername = async (
 
     return true;
 };
+
+export const updateEmail = async (
+  db: DBtype,
+  newEmail: string,
+  requestPassword: string,
+  userId: string
+) => {
+
+    const existing : User[] = await db
+        .select()
+        .from(users)
+        .where(
+            eq(users.email, newEmail),
+        );
+    if(existing.length != 0) {
+        return false;
+    }
+
+    const user = await db
+        .select()
+        .from(users)
+        .where(eq(users.userId, userId))
+        .then((res) => res[0]);
+
+    if (!user) return false;
+
+    const isValidPassword = await compare(requestPassword, user.passwordHash);
+
+    if (!isValidPassword) return false;
+
+    await db
+        .update(users)
+        .set({ email: newEmail })
+        .where(eq(users.userId, userId));
+
+    return true;
+};
+
+export const updatePassword = async (
+  db: DBtype,
+  newPassword: string,
+  requestPassword: string,
+  userId: string
+) => {
+
+    const user = await db
+        .select()
+        .from(users)
+        .where(eq(users.userId, userId))
+        .then((res) => res[0]);
+
+    if (!user) return false;
+
+    const isValidPassword = await compare(requestPassword, user.passwordHash);
+
+    if (!isValidPassword) return false;
+    const newPasswordHash = await hash(newPassword, 10);
+
+    await db
+        .update(users)
+        .set({ passwordHash: newPasswordHash })
+        .where(eq(users.userId, userId));
+
+    return true;
+};

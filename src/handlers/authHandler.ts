@@ -1,7 +1,7 @@
 import { Context } from "hono"
 import { getDB } from "../db/client"
 import { success, failure } from "../utils/response"
-import { LoginSchema, RegisterSchema, PasswordResetRequestSchema, PasswordResetSchema, UpdateUsernameSchema } from "../schemas/auth"
+import { LoginSchema, RegisterSchema, PasswordResetRequestSchema, PasswordResetSchema, UpdateUsernameSchema, UpdateEmailSchema, UpdatePasswordSchema } from "../schemas/auth"
 import { cookieOptions, generateToken } from "../utils/token"
 import { deleteCookie, getCookie, setCookie } from "hono/cookie"
 import { inputValidator } from "../utils/helpers"
@@ -121,6 +121,48 @@ export const updateUsernameHandler = async (c: Context) => {
         return c.json(failure(null, "Error in changing username"), 400);
     }
     else{
-        return c.json(success(null, "Username has been reset successfully."));    
+        return c.json(success(null, "Username has been changed successfully."));    
+    } 
+}
+
+export const updateEmailHandler = async (c: Context) => {
+    const validation = await inputValidator(c, UpdateEmailSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+        
+    const payload = c.get("jwtPayload") as { sub: string } | undefined;
+
+    if (!payload?.sub) {
+        return c.json(failure(null, "Invalid token or unauthorized"), 401);
+    }
+
+    const response = await authService.updateEmail(getDB(c.env), body.newEmail, body.password, payload.sub);
+
+    if(!response){
+        return c.json(failure(null, "Error in changing email"), 400);
+    }
+    else{
+        return c.json(success(null, "Email has been changed successfully."));    
+    } 
+}
+
+export const updatePasswordHandler = async (c: Context) => {
+    const validation = await inputValidator(c, UpdatePasswordSchema);
+    if (typeof validation === 'string') return c.json(failure(null, validation));
+    const body = validation;
+        
+    const payload = c.get("jwtPayload") as { sub: string } | undefined;
+
+    if (!payload?.sub) {
+        return c.json(failure(null, "Invalid token or unauthorized"), 401);
+    }
+
+    const response = await authService.updatePassword(getDB(c.env), body.newPassword, body.password, payload.sub);
+
+    if(!response){
+        return c.json(failure(null, "Error in changing password"), 400);
+    }
+    else{
+        return c.json(success(null, "Password has been changed successfully."));    
     } 
 }

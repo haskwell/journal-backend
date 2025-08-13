@@ -10,5 +10,7 @@ authRoutes.get('/auth/me', authHandler.getCurrentUserHandler);
 authRoutes.post('/password-reset-request', authHandler.passwordResetRequestHandler);
 authRoutes.post('/password-reset', authHandler.passwordResetHandler);
 authRoutes.patch('/auth/update-username', authHandler.updateUsernameHandler);
+authRoutes.patch('/auth/update-email', authHandler.updateEmailHandler);
+authRoutes.patch('/auth/update-password', authHandler.updatePasswordHandler);
 
 export default authRoutes

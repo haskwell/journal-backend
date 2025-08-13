@@ -16,6 +16,16 @@ export const UpdateUsernameSchema = z.object({
     password: z.string().min(1, "Password is required"),
 });
 
+export const UpdateEmailSchema = z.object({
+    newEmail: z.email("Invalid email address"),
+    password: z.string().min(1, "Password is required"),
+});
+
+export const UpdatePasswordSchema = z.object({
+    newPassword: z.string().min(6, "Password must be at least 6 characters long"),
+    password: z.string().min(1, "Password is required"),
+})
+
 export const PasswordResetRequestSchema = z.object({
     email: z.email("Invalid email address"),
 });

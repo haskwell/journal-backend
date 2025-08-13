@@ -17,14 +17,29 @@ export const sharePage = async (db: DBtype, fromUserId: string, toUsername: stri
     if (pagesResult.length === 0) return false;
 
     const pageId = pagesResult[0].pageId;
+    const existingShare = await db
+        .select()
+        .from(sharedPages)
+        .where(
+            and(
+                eq(sharedPages.sharedFromUserId, fromUserId),
+                eq(sharedPages.sharedToUserId, toUserIdarr[0].userId),
+                eq(sharedPages.sharedPageId, pageId)
+            )
+        );
 
+    if (existingShare.length > 0) {
+        return false;
+    }
     const newShare = {
         sharedFromUserId: fromUserId,
         sharedToUserId: toUserIdarr[0].userId,
         sharedPageId: pageId,
         dateShared: new Date().toISOString()
     };
-    await db.insert(sharedPages).values(newShare);
+    const res = await db.insert(sharedPages).values(newShare);
+    if(res.length === 0) return false;
+    else
     return newShare;
 };
 
@@ -51,6 +66,7 @@ export const getPagesSharedWithMeById = async (db: DBtype, userId: string, pageI
             eq(sharedPages.sharedPageId, pageId)
         )
     )
+    
     if (share.length === 0) {
         return false;
     }
