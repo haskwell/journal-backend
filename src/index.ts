@@ -7,7 +7,7 @@ import { failure } from "./utils/response";
 import pageRoutes from "./routes/page";
 import shareRoutes from "./routes/share";
 
-//very cool project
+//very cool project YAYAYYAYAYAYY
 
 type Bindings = {
   JWT_SECRET: string;
