@@ -5,6 +5,7 @@ import { jwt } from "hono/jwt";
 import { cors } from "hono/cors";
 import { failure } from "./utils/response";
 import pageRoutes from "./routes/page";
+import shareRoutes from "./routes/share";
 
 //very cool project
 
@@ -39,6 +40,7 @@ app.use('/api/auth/*', async (c, next) => {
 });
 
 app.route('/api', authRoutes);
-app.route('/api', pageRoutes)
+app.route('/api', pageRoutes);
+app.route('/api', shareRoutes);
 
 export default app
