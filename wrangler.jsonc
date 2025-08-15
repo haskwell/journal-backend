@@ -3,6 +3,16 @@
   "name": "journal-backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-07-29",
+    "d1_databases": [
+     {
+      "binding": "DB",
+      "database_name": "journal-db",
+      "database_id": "9782127a-8bdf-4fd0-9217-64b952479f08"
+    }
+  ],
+  "vars":{
+    "JWT_SECRET": "baller",
+  }
   //"d1_databases": [
   //   {
   // "binding": "DB",
