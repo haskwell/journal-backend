@@ -16,10 +16,10 @@ type Bindings = {
 const app = new Hono<{Bindings: Bindings}>();
 
 app.use(
-  '*',
+  '/api/*',
   cors({
     origin: ['https://spero.pages.dev', 'http://localhost:5173'],
-    credentials: true,
+    credentials: true
   })
 )
 

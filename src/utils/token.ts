@@ -19,5 +19,6 @@ export const cookieOptions = {
     secure: true,
     sameSite: 'None',
     path: '/',
-    maxAge: 3600
+    maxAge: 3600,
+    partitioned: true
 } as CookieOptions;
