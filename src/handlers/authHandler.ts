@@ -49,6 +49,16 @@ export const logout = async (c: Context) => {
     return c.json(success(null, "Log out successful"), 200);
 }
 
+export const isLoggedIn = async (c: Context) => {
+    const token = getCookie(c, 'authToken');
+    if(!token){
+        return c.json(failure(null, "User is not logged in"));
+    }
+    else{
+        return c.json(success(null, "User is logged in"));
+    }
+}
+
 export const getCurrentUserHandler = async (c: Context) => {
     const payload = c.get("jwtPayload") as { sub: string } | undefined;
 
