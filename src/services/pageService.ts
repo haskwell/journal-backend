@@ -23,7 +23,7 @@ export const createPage = async (db: DBtype, request: string) => {
         pageTitle: "New Page",
         content: "",
         mood: 5,
-        color: "black",
+        color: "#63452c",
     }
     await db
         .insert(pages)
@@ -73,6 +73,8 @@ export const getPagesList = async (db: DBtype, listStart: number, listEnd: numbe
                                             .offset(listStart)
                                             .limit(listEnd - listStart)
 
+
+    console.log(pagesList.length)
     return pagesList;
 }
 
